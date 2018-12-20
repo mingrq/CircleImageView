@@ -23,9 +23,6 @@ import android.util.AttributeSet;
  */
 public class CircleImageView extends AppCompatImageView {
 
-    private Paint paint;
-    BitmapShader shader;
-
 
     public CircleImageView(Context context) {
         this(context, null);
@@ -37,32 +34,34 @@ public class CircleImageView extends AppCompatImageView {
 
     public CircleImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        paint = new Paint();
-        paint.setAntiAlias(true);
+
     }
 
     @Override
     public void draw(Canvas canvas) {
         Bitmap bitmap = getBitmap(getDrawable());
+        BitmapShader shader = null;
         if (bitmap != null) {
             int viewWidth = getWidth();//控件宽度
             int viewHeight = getHeight();//控件高度
-            int viewMinSize = Math.min(viewHeight,viewWidth);//控件最小尺寸
+            int viewMinSize = Math.min(viewHeight, viewWidth);//控件最小尺寸
             int width = bitmap.getWidth();//图片宽度
             int height = bitmap.getHeight();//图片高度
             float dstWidth = viewMinSize;//圆形图片宽度
             float dstHeight = viewMinSize;//圆形图片高度
-            if (shader ==null){
+            if (shader == null) {
                 shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);//新建着色器
             }
-            if (shader!=null){
+            if (shader != null) {
                 Matrix matrix = new Matrix();
-                matrix.setScale(dstWidth/width,dstHeight/height);
+                matrix.setScale(dstWidth / width, dstHeight / height);
                 shader.setLocalMatrix(matrix);
             }
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
             paint.setShader(shader);
             float radius = viewMinSize / 2.0f;
-            canvas.drawCircle(radius,radius,radius,paint);
+            canvas.drawCircle(radius, radius, radius, paint);
         } else {
             super.draw(canvas);
         }
